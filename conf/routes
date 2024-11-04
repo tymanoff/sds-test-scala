@@ -1,0 +1,4 @@
+GET     /student/all                controller.StudentController.getStudents
+POST    /student/update/:id         controller.StudentController.updateStudent(id: String)
+PUT     /student/create             controller.StudentController.createStudent
+DELETE  /student/delete/:id         controller.StudentController.deleteStudent(id: String)
