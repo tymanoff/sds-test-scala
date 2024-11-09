@@ -1,5 +1,6 @@
 package controller
 
+import filter.AuthenticatedAction
 import model.StudentDto
 import play.api.libs.json._
 import play.api.mvc._
@@ -9,18 +10,18 @@ import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class StudentController @Inject()(cc: ControllerComponents, studentService: StudentService)(implicit ec: ExecutionContext) extends AbstractController(cc) {
+class StudentController @Inject()(cc: ControllerComponents, studentService: StudentService, authenticatedAction: AuthenticatedAction)(implicit ec: ExecutionContext) extends AbstractController(cc) {
 
   private val logger = play.api.Logger(this.getClass)
 
-  def getStudents: Action[AnyContent] = Action.async {
+  def getStudents: Action[AnyContent] = authenticatedAction.async {
     logger.info("Getting all students")
     studentService.getStudents.map { students =>
       Ok(Json.toJson(students))
     }
   }
 
-  def updateStudent(id: String): Action[JsValue] = Action.async(parse.json) { request =>
+  def updateStudent(id: String): Action[JsValue] = authenticatedAction.async(parse.json) { request =>
     logger.info(s"Updating student with id $id")
     request.body.validate[StudentDto].fold(
       errors => {
@@ -36,7 +37,7 @@ class StudentController @Inject()(cc: ControllerComponents, studentService: Stud
     )
   }
 
-  def createStudent: Action[JsValue] = Action.async(parse.json) { request =>
+  def createStudent: Action[JsValue] = authenticatedAction.async(parse.json) { request =>
     logger.info("Creating student")
     request.body.validate[StudentDto].fold(
       errors => {
@@ -51,7 +52,7 @@ class StudentController @Inject()(cc: ControllerComponents, studentService: Stud
     )
   }
 
-  def deleteStudent(id: String): Action[AnyContent] = Action.async {
+  def deleteStudent(id: String): Action[AnyContent] = authenticatedAction.async {
     logger.info(s"Deleting student with id $id")
     studentService.deleteStudent(id).map {
       case true => NoContent

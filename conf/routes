@@ -1,6 +1,9 @@
 GET     /student/all                controller.StudentController.getStudents
++ nocsrf
 POST    /student/update/:id         controller.StudentController.updateStudent(id: String)
++ nocsrf
 PUT     /student/create             controller.StudentController.createStudent
++ nocsrf
 DELETE  /student/delete/:id         controller.StudentController.deleteStudent(id: String)
 
 GET   /login          controller.OAuthController.login
