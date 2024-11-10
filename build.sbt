@@ -1,8 +1,8 @@
-name := "sds-test-scala"
+name := "app"
 
 version := "0.0.1"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file(".")).enablePlugins(PlayScala).enablePlugins(JavaAppPackaging)
 
 scalaVersion := "2.13.14"
 

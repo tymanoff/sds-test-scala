@@ -13,15 +13,28 @@ services:
       - "27017:27017"
     restart: always
 
-#  app:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    container_name: scala_app
-#    ports:
-#      - "9000:9000"
-#    environment:
-#      MONGO_URI: "mongodb://sds:sds@mongodb:27017/mysdsscala?authSource=admin"
-#    depends_on:
-#      - mongodb
-#    restart: always
+  keycloak:
+    image: "quay.io/keycloak/keycloak:23.0.6"
+    container_name: quarkus-keycloak
+    restart: "no"
+    ports:
+      - "8080:8080"
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    volumes:
+      - ./conf/keycloak:/opt/keycloak/data/import
+    command:
+      - start-dev
+      - --import-realm
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app
+    ports:
+      - "9000:9000"
+    depends_on:
+      - mongodb
+    restart: always
